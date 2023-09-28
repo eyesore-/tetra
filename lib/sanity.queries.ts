@@ -45,6 +45,11 @@ export interface Author {
   picture?: any
 }
 
+export interface Page {
+  slug: string
+  title: string
+}
+
 export interface Post {
   _id: string
   title?: string
