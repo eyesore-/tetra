@@ -5,14 +5,14 @@ import {
   projectId,
   useCdn,
 } from 'lib/sanity.api'
-import { postBySlugQuery } from 'lib/sanity.queries'
+import { pageQuery } from 'lib/sanity.queries'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createClient } from 'next-sanity'
 import { isValidSecret } from 'sanity-plugin-iframe-pane/is-valid-secret'
 
 function redirectToPreview(
   res: NextApiResponse<string | void>,
-  Location: '/' | `/posts/${string}`,
+  Location: '/' | `${string}`,
 ): void {
   // Enable Draft Mode by setting the cookies
   res.setDraftMode({ enable: true })
@@ -54,17 +54,19 @@ export default async function preview(
     return redirectToPreview(res, '/')
   }
 
+  const slug = Array.isArray(req.query.slug)
+    ? req.query.slug.join('/')
+    : req.query.slug
   // Check if the post with the given `slug` exists
-  const post = await client.fetch(postBySlugQuery, {
-    slug: req.query.slug,
-  })
+  const page = await client.fetch(pageQuery(slug))
+  console.log('PAGE', page)
 
   // If the slug doesn't exist prevent preview mode from being enabled
-  if (!post) {
+  if (!page) {
     return res.status(401).send('Invalid slug')
   }
 
   // Redirect to the path from the fetched post
   // We don't redirect to req.query.slug as that might lead to open redirect vulnerabilities
-  redirectToPreview(res, `/posts/${post.slug}`)
+  redirectToPreview(res, `/${page.slug}`)
 }

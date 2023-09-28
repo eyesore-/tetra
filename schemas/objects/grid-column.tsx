@@ -31,15 +31,13 @@ export default defineType({
   ],
   preview: {
     select: {
-      sizes: 'sizes.0',
       blocks: 'blocks',
     },
-    prepare({ sizes }) {
-      const { width } = sizes
-
+    prepare({ blocks }) {
+      console.log('blocks', blocks)
       return {
         title: 'Block',
-        media: <Avatar initials={width} size={1} />,
+        subtitle: blocks ? blocks.map((b) => b._type).join(', ') : '',
       }
     },
   },

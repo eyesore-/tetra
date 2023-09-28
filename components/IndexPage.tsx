@@ -23,15 +23,18 @@ export default function IndexPage(props: IndexPageProps) {
       <Layout preview={preview} loading={loading}>
         <Container>
           <BlogHeader title={title} description={description} level={1} />
-          {pages.map((p) => (
-            <a
-              className="underline underline-offset-4 text-blue-600 hover:text-blue-800"
-              key={p.slug}
-              href={`/${p.slug}`}
-            >
-              {p.title}
-            </a>
-          ))}
+          <ul role="list">
+            {pages.map((p) => (
+              <li key={p.slug}>
+                <a
+                  className="underline underline-offset-4 text-blue-600 hover:text-blue-800"
+                  href={`/${p.slug}`}
+                >
+                  {p.title}
+                </a>
+              </li>
+            ))}
+          </ul>
         </Container>
       </Layout>
     </>

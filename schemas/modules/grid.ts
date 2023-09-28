@@ -36,13 +36,8 @@ export default defineType({
       columns: 'columns',
     },
     prepare({ columns }) {
-      const image = (columns[0].blocks[0].content || []).find(
-        (b) => b._type === 'photo',
-      )
-
       return {
         title: `${columns.length} Column${columns.length === 1 ? '' : 's'}`,
-        media: image,
       }
     },
   },

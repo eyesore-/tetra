@@ -70,7 +70,7 @@ export default defineType({
     prepare({ content }) {
       return {
         title: 'Freeform',
-        subtitle: content?.children[0]?.text,
+        // subtitle: content?.children[0]?.text,
       }
     },
   },
