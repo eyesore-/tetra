@@ -92,16 +92,25 @@ const Module = ({ data }) => {
   return <M data={data} />
 }
 
-const Page = ({ data }) =>
+const ProdPage = ({ data }) =>
   data?.modules.map((m) => <Module key={m._key} data={m} />)
+const PreviewPage = ({ data }) => null
+
+const Page = ({ data, draftMode }) => {
+  console.log({ data, draftMode })
+
+  return null
+}
 
 export async function getStaticProps({ draftMode, params }) {
   const client = getClient(draftMode ? { token: readToken } : undefined)
   const data = await client.fetch(pageQuery(params.slug.join('/')))
+  console.log('DATA', data)
 
-  return {
-    props: { data },
-  }
+  return { props: { draftMode } }
+  // return {
+  //   props: { data, draftMode },
+  // }
 }
 
 export async function getStaticPaths({ draftMode }) {
