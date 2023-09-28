@@ -2,6 +2,7 @@ import { PortableText, PortableTextReactComponents } from '@portabletext/react'
 import { readToken } from 'lib/sanity.api'
 import { getClient } from 'lib/sanity.client'
 import { ALL_SLUGS, type Page, pageQuery } from 'lib/sanity.queries'
+import { useLiveQuery } from 'next-sanity/preview'
 
 const heroComponents: Partial<PortableTextReactComponents> = {
   block: {
@@ -94,23 +95,28 @@ const Module = ({ data }) => {
 
 const ProdPage = ({ data }) =>
   data?.modules.map((m) => <Module key={m._key} data={m} />)
-const PreviewPage = ({ data }) => null
+const PreviewPage = ({ data }) => {
+  const [liveData] = useLiveQuery(data, pageQuery(data.slug))
+
+  return liveData?.modules.map((m) => <Module key={m._key} data={m} />)
+}
 
 const Page = ({ data, draftMode }) => {
   console.log({ data, draftMode })
 
-  return null
+  if (draftMode) return <PreviewPage data={data} />
+
+  return <ProdPage data={data} />
 }
 
 export async function getStaticProps({ draftMode, params }) {
-  const client = getClient(draftMode ? { token: readToken } : undefined)
+  const token = draftMode ? readToken : ''
+  const client = getClient(draftMode ? { token } : undefined)
   const data = await client.fetch(pageQuery(params.slug.join('/')))
-  console.log('DATA', data)
 
-  return { props: { draftMode } }
-  // return {
-  //   props: { data, draftMode },
-  // }
+  return {
+    props: { data, draftMode, token },
+  }
 }
 
 export async function getStaticPaths({ draftMode }) {
