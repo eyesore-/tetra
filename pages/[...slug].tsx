@@ -4,6 +4,8 @@ import { getClient } from 'lib/sanity.client'
 import { ALL_SLUGS, type Page, pageQuery } from 'lib/sanity.queries'
 import { useLiveQuery } from 'next-sanity/preview'
 
+import Alert from '../components/AlertBanner'
+
 const heroComponents: Partial<PortableTextReactComponents> = {
   block: {
     h1: ({ children }) => (
@@ -98,18 +100,21 @@ const ProdPage = ({ data }) =>
 const PreviewPage = ({ data }) => {
   const [liveData] = useLiveQuery(data, pageQuery(data.slug))
 
-  return liveData?.modules.map((m) => <Module key={m._key} data={m} />)
+  return (
+    <>
+      <Alert preview />
+      {liveData?.modules.map((m) => <Module key={m._key} data={m} />)}
+    </>
+  )
 }
 
 const Page = ({ data, draftMode }) => {
-  console.log({ data, draftMode })
-
   if (draftMode) return <PreviewPage data={data} />
 
   return <ProdPage data={data} />
 }
 
-export async function getStaticProps({ draftMode, params }) {
+export async function getStaticProps({ draftMode = false, params }) {
   const token = draftMode ? readToken : ''
   const client = getClient(draftMode ? { token } : undefined)
   const data = await client.fetch(pageQuery(params.slug.join('/')))
