@@ -43,8 +43,8 @@ const Accordion = ({ data }) => (
 )
 const AccordionList = ({ data }) => (
   <ul role="list" className="divide-y divide-gray-100">
-    {data.items.map((a) => (
-      <li key={a._key} className="gap-x-6 py-5">
+    {data.items.map((a, i) => (
+      <li key={`${a._key}-${i}`} className="gap-x-6 py-5">
         <Accordion data={a} />
       </li>
     ))}
@@ -76,13 +76,15 @@ const Column = ({ data }) => {
   )
 }
 
-const Grid = ({ data }) => (
-  <div className={`grid grid-cols-${data.size} gap-x-16 gap-y-16 mx-16`}>
-    {data.columns.map((c, i) => (
-      <Column key={i} data={c} />
-    ))}
-  </div>
-)
+const Grid = ({ data }) => {
+  return (
+    <div className={`grid grid-cols-${data.size} gap-x-16 gap-y-16 mx-16`}>
+      {data.columns.map((c, i) => (
+        <Column key={i} data={c} />
+      ))}
+    </div>
+  )
+}
 
 const Module = ({ data }) => {
   const M = {

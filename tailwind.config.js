@@ -6,6 +6,7 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx}',
     './plugins/**/*.{js,ts,jsx,tsx}',
   ],
+  safelist: [{ pattern: /grid-cols/ }, { pattern: /col-span/ }],
   theme: {
     extend: {
       colors: {
